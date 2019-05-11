@@ -21,7 +21,7 @@ impl L100 {
         window: &mut window::Window,
     ) -> Self {
         let delta = na::one();
-        let size = Vector3::new(50.0, 10.0, 10.0);
+        let size = Vector3::new(10.0, 2.0, 2.0);
         let shape = Cuboid::new(size / 2.0);
 
         let collider_desc = ColliderDesc::new(ShapeHandle::new(shape.clone()))

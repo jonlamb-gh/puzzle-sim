@@ -1,27 +1,31 @@
+// units: centimeters
+
+// TODO
+//   - subtract instead of add margin on shapes
+
 mod bar;
+mod builder;
 mod ground;
+mod puzzle;
 
 use nalgebra as na;
 
-use crate::bar::{Bar, L100Bar};
+use crate::builder::Builder;
 use crate::ground::Ground;
 use crate::na::{Point3, Vector3};
+use crate::puzzle::Puzzle;
 use kiss3d::camera::{ArcBall, Camera};
 use kiss3d::light::Light;
 use kiss3d::planar_camera::PlanarCamera;
 use kiss3d::post_processing::PostProcessingEffect;
 use kiss3d::window::{State, Window};
-use ncollide3d::shape::{Cuboid, ShapeHandle};
-use nphysics3d::object::{BodyHandle, ColliderDesc};
 use nphysics3d::world::World;
-use nphysics_testbed3d::objects::{box_node, node::Node};
-use std::collections::HashMap;
 
 struct AppState {
     arc_ball: ArcBall,
     world: World<f32>,
     ground: Ground,
-    bars: HashMap<BodyHandle, Box<Bar>>,
+    puzzle: Puzzle,
 }
 
 impl AppState {
@@ -33,29 +37,13 @@ impl AppState {
 
         let ground = Ground::new(&mut world, window);
 
-        let mut bars = HashMap::<BodyHandle, Box<Bar>>::new();
-
-        let l100_bar = L100Bar::new(
-            &mut world,
-            Vector3::new(0.0, 3.0, 0.0),
-            Point3::new(0.0, 1.0, 0.0),
-            window,
-        );
-        let _ = bars.insert(l100_bar.body(), Box::new(l100_bar));
-
-        let l100_bar = L100Bar::new(
-            &mut world,
-            Vector3::new(0.0, 5.0, 0.0),
-            Point3::new(1.0, 0.0, 0.0),
-            window,
-        );
-        let _ = bars.insert(l100_bar.body(), Box::new(l100_bar));
+        let puzzle = Builder::build(&mut world, window);
 
         AppState {
             arc_ball,
             world,
             ground,
-            bars,
+            puzzle,
         }
     }
 }
@@ -77,9 +65,7 @@ impl State for AppState {
 
             self.ground.update(&self.world);
 
-            for bar in self.bars.values_mut() {
-                bar.update(&self.world);
-            }
+            self.puzzle.update(&self.world);
         }
     }
 }
