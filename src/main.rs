@@ -33,6 +33,7 @@ impl AppState {
         let arc_ball = ArcBall::new(Point3::new(-20.0, 10.0, -20.0), Point3::new(0.0, 0.0, 0.0));
 
         let mut world = World::new();
+        //world.set_contact_model(SignoriniModel::new());
         world.set_gravity(Vector3::new(0.0, -9.81, 0.0));
 
         let ground = Ground::new(&mut world, window);

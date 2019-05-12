@@ -12,7 +12,7 @@ pub struct Ground {
 impl Ground {
     pub fn new(world: &mut World<f32>, window: &mut window::Window) -> Self {
         let delta = na::one();
-        let size = Vector3::new(20.0, 1.0, 20.0);
+        let size = Vector3::new(35.0, 1.0, 35.0);
         let shape = Cuboid::new(size / 2.0);
         let color = Point3::new(0.4, 0.4, 0.4);
 
